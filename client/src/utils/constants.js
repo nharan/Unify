@@ -5,6 +5,7 @@ export const debugMode = import.meta.env.VITE_DEBUG_MODE === "true" || false;
 
 export const VideoProvider = createContext();
 
+// Create a more robust PeerJS configuration for production
 export const peer = new Peer({
   host: import.meta.env.VITE_PEERJS_HOST || "0.peerjs.com",
   port: import.meta.env.VITE_PEERJS_PORT || 443,
@@ -23,12 +24,17 @@ export const peer = new Peer({
   debug: debugMode ? 3 : 0,
 });
 
-const SERVER_PORT = import.meta.env.VITE_SERVER_PORT || 3000;
+// Make sure we're using the correct server port from environment variables
+const SERVER_PORT = import.meta.env.VITE_SERVER_PORT || 5000;
 const CLIENT_PORT = 5173;
 
+// Ensure the WebSocket URL is correctly set for production
 export const WS_URL =
   import.meta.env.VITE_WS_REMOTE_URL ||
   window.location.href.replace("http", "ws").replace(CLIENT_PORT, SERVER_PORT);
+
+console.log("WebSocket URL:", WS_URL);
+console.log("Debug Mode:", debugMode);
 
 export const HEARTBEAT = {
   message: "ping",
