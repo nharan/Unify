@@ -6,9 +6,29 @@ const { port } = init();
 const server: Server = Bun.serve<{ id: string }>({
   port: port,
   fetch(req, server) {
-    return server.upgrade(req, { data: { id: createId() } })
-      ? undefined
-      : new Response("Welcome to Unify Server 🌐");
+    // Add CORS headers for HTTP requests
+    if (req.method === "OPTIONS") {
+      return new Response(null, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        },
+      });
+    }
+    
+    // Handle WebSocket upgrade
+    const upgraded = server.upgrade(req, { data: { id: createId() } });
+    if (upgraded) {
+      return undefined;
+    }
+    
+    // Return regular HTTP response with CORS headers
+    return new Response("Welcome to Unify Server 🌐", {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
   },
   websocket: {
     message,
