@@ -10,6 +10,17 @@ export const peer = new Peer({
   port: import.meta.env.VITE_PEERJS_PORT || 443,
   path: import.meta.env.VITE_PEERJS_PATH || "/",
   secure: import.meta.env.VITE_PEERJS_SECURE !== "false",
+  config: {
+    iceServers: [
+      { urls: "stun:stun.l.google.com:19302" },
+      { urls: "stun:stun1.l.google.com:19302" },
+      { urls: "stun:stun2.l.google.com:19302" },
+      { urls: "stun:stun3.l.google.com:19302" },
+      { urls: "stun:stun4.l.google.com:19302" },
+    ],
+    iceCandidatePoolSize: 10,
+  },
+  debug: debugMode ? 3 : 0,
 });
 
 const SERVER_PORT = import.meta.env.VITE_SERVER_PORT || 3000;
